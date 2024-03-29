@@ -1,4 +1,7 @@
-# create-svelte
+# Mind Palace
+
+An all-in-one collaborative project management and ideation platform where you can seamlessly bring teams together, organize your tasks effortlessly, track progress intuitively, and communicate seamlessly with your team.
+---
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
