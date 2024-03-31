@@ -2,3 +2,4 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <p>Showcase number 2</p>
+<button>clickable button</button>
