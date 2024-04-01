@@ -1,2 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+
+</script>
+
+
+<main>
+    <section class="sidepanel">
+        <h1>Mind Palace</h1>
+    </section>
+    <section class="screen">
+        <p>Screen</p>
+    </section>
+</main>
