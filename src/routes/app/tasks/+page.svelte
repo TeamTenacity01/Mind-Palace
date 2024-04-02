@@ -2,5 +2,5 @@
 </script>
 
 <div>
-    <h1>Dashboard</h1>
+    <h1>Tasks</h1>
 </div>
