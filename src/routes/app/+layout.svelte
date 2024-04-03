@@ -1,5 +1,6 @@
-<script>
+<script lang="ts">
     import { page } from '$app/stores';
+
     let isSideBarClosed = false;
     let sidebarClass = "sidepanel";
     let closeBtnClass = "close";
@@ -30,16 +31,16 @@
 
 <style lang="postcss">
     .app{
-        @apply grid grid-cols-[1.5fr_8.5fr] h-full;
+        @apply grid grid-cols-[5fr_5fr] sm:grid-cols-[3fr_7fr] lg:grid-cols-[1.5fr_8.5fr] h-full;
     }
     .app-sidepanel-closed{
         @apply grid grid-cols-[0fr_10fr] h-full;
     }
     .sidepanel-wrapper{
-        @apply relative;
+        @apply relative h-full;
     }
     .sidepanel{
-        @apply bg-slate-900 text-white grid grid-rows-[0.5fr_9fr_0.5fr] h-full;
+        @apply bg-slate-900 text-white grid grid-rows-[0.5fr_9fr_0.5fr] h-screen;
     }
     .sidepanel-closed{
         @apply hidden;
@@ -107,7 +108,7 @@
         @apply bg-slate-800;
     }
     .screen{
-        @apply p-4;
+        @apply p-4 h-full;
     }
 </style>
 
@@ -127,8 +128,8 @@
                     <h2>Teams</h2>
                     <!-- <hr> -->
                     <div class="teamlinks">
-                        <a href={$page.url.pathname}>Team 1</a>
-                        <a href={$page.url.pathname}>Team 2</a>
+                        <a href={$page.url.pathname}>Team Tencity</a>
+                        <a href={$page.url.pathname}>Team Perplexity</a>
                     </div>
                 </div>
             </div>
