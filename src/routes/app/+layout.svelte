@@ -31,7 +31,7 @@
 
 <style lang="postcss">
     .app{
-        @apply grid grid-cols-[5fr_5fr] sm:grid-cols-[3fr_7fr] lg:grid-cols-[1.5fr_8.5fr] h-full;
+        @apply grid grid-cols-[5fr_5fr] sm:grid-cols-[3fr_7fr] lg:grid-cols-[1.5fr_8.5fr] h-full overflow-hidden;
     }
     .app-sidepanel-closed{
         @apply grid grid-cols-[0fr_10fr] h-full;
