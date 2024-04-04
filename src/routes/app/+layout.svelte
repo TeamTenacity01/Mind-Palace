@@ -128,8 +128,8 @@
                     <h2>Teams</h2>
                     <!-- <hr> -->
                     <div class="teamlinks">
-                        <a href={$page.url.pathname}>Team Tencity</a>
-                        <a href={$page.url.pathname}>Team Perplexity</a>
+                        <a href="/app/team">Team Tenacity</a>
+                        <a href="/app/team">Team Perplexity</a>
                     </div>
                 </div>
             </div>
