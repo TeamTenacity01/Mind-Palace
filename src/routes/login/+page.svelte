@@ -1,8 +1,26 @@
 <script>
-
 	import { goto } from "$app/navigation";
-
+    import { supabase } from '../../supabaseClient'
+  
+    let loading = false
+    let email = ''
+  
+    const handleOTPLogin = async () => {
+      try {
+        loading = true
+        const { error } = await supabase.auth.signInWithOtp({ email })
+        if (error) throw error
+        alert('Check your email for login link!')
+      } catch (error) {
+        if (error instanceof Error) {
+          alert(error.message)
+        }
+      } finally {
+        loading = false
+      }
+    }
 </script>
+
 <style lang="postcss">
     .base{
         @apply grid  grid-cols-1  justify-items-center place-content-center font-inter h-screen
@@ -14,7 +32,7 @@
         @apply my-5 flex flex-row items-center text-base sm:w-1/3 w-1/2 before:bg-black before:m-2 before:content-[''] before:p-px before:flex-1 after:bg-black after:m-2 after:content-[''] after:p-px after:flex-1
     }
     .email_input {
-        @apply bg-transparent my-3 sm:text-xl text-base border p-3  border-black rounded-lg w-5/12 focus:ring-blue-500 focus:border-blue-500  
+        @apply bg-transparent my-3 sm:text-xl text-base border p-3  border-black rounded-lg w-full focus:ring-blue-500 focus:border-blue-500  
     }
 </style>
 
@@ -38,6 +56,8 @@
 
     <p class="text_div"> or log in with email</p>
 
-    <input type="text" placeholder="Type your email here..." class="email_input">
+    <form class="flex flex-row w-5/12 gap-3" on:submit|preventDefault="{handleOTPLogin}">
+        <input type="text" placeholder="Type your email here..." class="email_input" bind:value={email}>
+        <button type="submit" class="login_button" aria-live="polite" disabled="{loading}">{loading ? 'Loading' : 'Send magic link'}</button>
+    </form>
 </div>
-
