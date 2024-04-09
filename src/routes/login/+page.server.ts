@@ -18,11 +18,11 @@ export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) 
 
 
 export const actions = {
-  handleGoogleLogin: async ({ locals: { supabase } }) => {    
+  handleGoogleLogin: async ({ url, locals: { supabase } }) => {    
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: '/auth/callback',
+          redirectTo: `${url.origin}/auth/callback?next=/app`,
         },
     })
           
@@ -40,16 +40,16 @@ export const actions = {
     }
 
     if (data.url) {
+      console.log(data.url)
       redirect(303, data.url) // use the redirect API for your server framework
     }
-    redirect(303, "/app")
   },
 
-  handleGithubLogin: async ({ locals: { supabase } }) => {    
+  handleGithubLogin: async ({ url, locals: { supabase } }) => {    
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: '/auth/callback',
+        redirectTo: `${url.origin}/auth/callback?next=/app`,
       },
     })
           
@@ -69,17 +69,25 @@ export const actions = {
     if (data.url) {
       redirect(303, data.url) // use the redirect API for your server framework
     }
-    redirect(303, "/app")
   },
 
-  handleOTPLogin: async ({ request, locals: { supabase } }) => {
+  handleOTPLogin: async ({ url, request, locals: { supabase } }) => {
     const formData = await request.formData()
 
     const email = formData.get('email') as string
+    console.log(email)
 
-    const { error } = await supabase.auth.signInWithOtp({ email })
-
+    const { error } = await supabase.auth.signInWithOtp({ 
+      email: email,
+      options:{
+        // set this to false if you do not want the user to be automatically signed up
+        // shouldCreateUser: false,
+        emailRedirectTo: `${url.origin}/auth/callback?next=/app`,
+      },
+    })
+    console.log("here now")
     if (error) {
+      console.log(error)
       if (error instanceof AuthApiError && error.status === 400) {
         return fail(400, {
           error: 'Invalid credentials.',
@@ -95,10 +103,8 @@ export const actions = {
         },
       })
     }
-
-    console.log("THAT SHIT SIGNED ME IN")
-    // throw redirect(303, '/admin')
-    alert('Check your email for login link!')
+    
+    console.log('Check your email for login link!')
   },
 
   signout: async ({ locals: { supabase } }) => {

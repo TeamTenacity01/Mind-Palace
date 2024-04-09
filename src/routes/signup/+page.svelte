@@ -47,10 +47,10 @@
         </button>
     </form>
 
-    <p class="text_div">or</p>
+    <!-- <p class="text_div">or</p>
 
     <form class="flex flex-row w-5/12 gap-3" method="post" action="/signup?/handleOTPSignUp" use:enhance>
         <input type="text" placeholder="Type your email here..." class="email_input" bind:value={email}>
         <button type="submit" class="continue_button" aria-live="polite" disabled="{loading}">{loading ? 'Loading' : 'Send magic link'}</button>
-    </form>
+    </form> -->
 </div>

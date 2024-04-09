@@ -18,22 +18,20 @@ export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) 
 
 
 export const actions = {
-  handleGoogleSignUp: async ({ locals: { supabase } }) => {    
+  handleGoogleSignUp: async ({ url, locals: { supabase } }) => {    
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: '/auth/callback',
+          redirectTo: `${url.origin}/auth/callback?next=/app`
         },
     })
           
     if (error) {
       if (error instanceof AuthApiError && error.status === 400) {
-        alert("Google Not Worky")
         return fail(400, {
           error: 'Invalid credentials.',
         })
       }
-      alert("Server error m8")
       return fail(500, {
         error: 'Server error. Try again later.',
       })
@@ -45,22 +43,20 @@ export const actions = {
     redirect(303, "/app")
   },
 
-  handleGithubSignUp: async ({ locals: { supabase } }) => {    
+  handleGithubSignUp: async ({ url, locals: { supabase } }) => {    
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: '/auth/callback',
+        redirectTo: `${url.origin}/auth/callback?next=/app`,
       },
     })
           
     if (error) {
       if (error instanceof AuthApiError && error.status === 400) {
-        alert("Github Not Worky")
         return fail(400, {
           error: 'Invalid credentials.',
         })
       }
-      alert("Server error m8")
       return fail(500, {
         error: 'Server error. Try again later.',
       })
@@ -98,7 +94,7 @@ export const actions = {
 
     console.log("THAT SHIT SIGNED ME IN")
     // throw redirect(303, '/admin')
-    alert('Check your email for login link!')
+    // alert('Check your email for login link!')
   },
 
   signout: async ({ locals: { supabase } }) => {
