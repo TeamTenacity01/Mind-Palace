@@ -1,10 +1,15 @@
 <script>
 	import { goto } from "$app/navigation";
     import { supabase } from '../../supabaseClient'
+    import {createClient} from '@supabase/supabase-js'
   
     let loading = false
     let email = ''
-  
+    
+    const SUPABASE_KEY = 'SUPABASE_CLIENT_API_KEY'
+    const SUPABASE_URL = "https://hqpzizdmhefoirvaltce.supabase.co"
+    //const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const handleOTPLogin = async () => {
       try {
         loading = true
@@ -19,6 +24,18 @@
         loading = false
       }
     }
+    
+    async function loginWithGoogle(){
+        let currentUrl = window.location.href
+        currentUrl = currentUrl.substring(0, currentUrl.length-6)
+
+        const {data, error} = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: currentUrl + "/app"
+            }
+        })
+    } 
 </script>
 
 <style lang="postcss">
@@ -41,7 +58,7 @@
     <h1 class="text-4xl my-5">Welcome to Mind Palace</h1>
     <p class="text-2xl  mb-8 text-center">To get started, sign in with Google or Github</p>
 
-    <button class="login_button" on:click={() => goto("/app")}>
+    <button class="login_button"  on:click={loginWithGoogle}>
         <svg class="w-8 h-8 me-2 px-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z" clip-rule="evenodd"/>
         </svg>
