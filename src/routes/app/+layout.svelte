@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    import { enhance } from '$app/forms';
 
     let isSideBarClosed = false;
     let sidebarClass = "sidepanel";
@@ -129,18 +130,17 @@
                     <!-- <hr> -->
                     <div class="teamlinks">
                         <a href="/app/team">Team Tenacity</a>
-                        <a href="/app/team">Team Perplexity</a>
                     </div>
                 </div>
             </div>
-            <div class="bottombtns">
-                <button class="settingsbtn">
+            <form class="bottombtns" method="post" action="/app?/signout" use:enhance>
+                <button class="settingsbtn" type="submit">
                     🚪 Sign Out
                 </button>
                 <button class="settingsbtn">
                     ⚙️ Settings
                 </button>
-            </div>
+            </form>
         </section>
         
         <button class="close-btn" on:click={() => closeSideBar()}>
