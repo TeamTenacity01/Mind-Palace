@@ -1,22 +1,18 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { supabase } from "../supabaseClient";
     import { redirect } from '@sveltejs/kit'
-	import { goto } from "$app/navigation";
 
-    let session0 = null;
+    export let data
+    let { supabase } = data
+    $: ({ supabase } = data)
 
     onMount( async () => {
-        const { data: { session } } = await supabase.auth.getSession()
+        const { data: { user } } = await supabase.auth.getUser()
         // if the user is already logged in return them to the account page
-        if (session) {
-            session0 = session;
+        if (user) {
+            throw redirect(303, "/app")
         }
     })
-
-    if (session0){
-        goto("/app")
-    }
 </script>
 
 <nav>

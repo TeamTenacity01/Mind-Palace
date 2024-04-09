@@ -46,13 +46,13 @@
             Login with Github
         </button>
     </form>
-
+<!-- 
     <p class="text_div">or</p>
 
     <form class="flex flex-row w-5/12 gap-3" method="post" action="/login?/handleOTPLogin" use:enhance>
-        <input type="text" placeholder="Type your email here..." class="email_input" bind:value={email}>
-        <button type="submit" class="continue_button" aria-live="polite" disabled="{loading}">{loading ? 'Loading' : 'Send magic link'}</button>
-    </form>
+        <input name="email" type="email" id="email" placeholder="Type your email here..." class="email_input" bind:value={email}>
+        <button type="submit" class="continue_button" aria-live="polite" disabled="{loading}" >{loading ? 'Loading' : 'Send magic link'}</button>
+    </form> -->
 </div>
 
 <!-- http://localhost:5173/#access_token=eyJhbGciOiJIUzI1NiIsImtpZCI6IlFnOGM2SHFMV3JmaXpRWFQiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzEyMzgzMDA0LCJpYXQiOjE3MTIzNzk0MDQsImlzcyI6Imh0dHBzOi8vaHFweml6ZG1oZWZvaXJ2YWx0Y2Uuc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjQ0OGJiNGM4LTA4NGEtNDg1Mi1hYmVlLTY5YWQ3NDJhYzUxOCIsImVtYWlsIjoiZXdvcm9qb3NodWFAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJnaXRodWIiLCJwcm92aWRlcnMiOlsiZ2l0aHViIl19LCJ1c2VyX21ldGFkYXRhIjp7ImF2YXRhcl91cmwiOiJodHRwczovL2F2YXRhcnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3UvNzIzNTIwODk_dj00IiwiZW1haWwiOiJld29yb2pvc2h1YUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZnVsbF9uYW1lIjoiSm9zaHVhIEV3b3JvIiwiaXNzIjoiaHR0cHM6Ly9hcGkuZ2l0aHViLmNvbSIsIm5hbWUiOiJKb3NodWEgRXdvcm8iLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6Ikpvc2h1YUV3b3JvIiwicHJvdmlkZXJfaWQiOiI3MjM1MjA4OSIsInN1YiI6IjcyMzUyMDg5IiwidXNlcl9uYW1lIjoiSm9zaHVhRXdvcm8ifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJvYXV0aCIsInRpbWVzdGFtcCI6MTcxMjM3OTQwNH1dLCJzZXNzaW9uX2lkIjoiNzEwNWRiMTQtYTVkOS00YmFlLWJmM2YtODViNzE1ZWMzYTAyIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.znLVxpQGF1m_1EaCyLyKkf_pCabfRzfPC1nsavEmnnw&expires_at=1712383004&expires_in=3600&provider_token=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&refresh_token=8321L0bBLfEIZgmrVVfNyQ&token_type=bearer -->

@@ -6,8 +6,7 @@ export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) 
 
   // if the user is already logged in return them to the account page
   if (session) {
-    console.log(session)
-    redirect(303, '/app')
+    redirect(303, `${url.origin}/auth/callback?next=/app`)
   }
 
   return { url: url.origin }
