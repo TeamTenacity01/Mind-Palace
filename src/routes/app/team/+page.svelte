@@ -154,49 +154,46 @@ let tasklist: Task[] = [
   
 </script>
 
+<style lang="postcss">
+  .btn{
+    @apply border border-gray-300 w-12;
+  }
+</style>
+
 <!--First task-->
 <Layout title="Project Roadmap">
-  <div class="flex gap-6">
-    <table class="border-collapse border border-gray-300">
-        {#each tasklist as task}
-        <tr>
-            <td class="border border-gray-300 p-4 w-48 h-15">{task.name}</td>
-        </tr>
-        {/each}
-    </table>
+  <div class="flex">
 
-    <!--Renderer Table if render or not so the + or - -->
     <table class="border-collapse border border-gray-300">
         {#each tasklist as task, index}
-        <tr>
-            <td class="border border-gray-300 p-4 cursor-pointer" on:click={() => setRender(index)}>
-                {#if task.isRendered}
-                  <button class="btn">+</button>
+          <tr class="border border-r-0 border-gray-300 h-12 w-full flex flex-row justify-between align-middle">
+              <td class="my-auto mx-2">{task.name}</td>
+              {#if task.isRendered}
+                  <button class="btn" on:click={() => setRender(index)}>+</button>
                 {:else}
-                  <button class="btn">-</button>
-                {/if}
-            </td>
-        </tr>
+                  <button class="btn" on:click={() => setRender(index)}>-</button>
+              {/if}
+          </tr>
         {/each}
     </table>
 
     <!-- Vertical line -->
     <div class="border-l border-gray-300 h-full"></div>
 
-  <!-- Rendered table -->
-<table class="border-collapse border border-gray-300">
-  {#each tasklist as task, index}
-  {#if task.isRendered}
-  <tr>
-    <td class="border border-gray-300 p-4 w-48 h-15">{task.name}</td>
-  </tr>
-  {:else}
-  <tr>
-    <td class="border border-gray-300 p-4 w-48 h-15"></td>
-  </tr>
-  {/if}
-  {/each}
-</table>
+    <!-- Rendered table -->
+    <table class="border-collapse border border-gray-300 w-full">
+      {#each tasklist as task}
+        {#if task.isRendered}
+        <tr class="border border-gray-300 h-12 w-full flex flex-row justify-between align-middle">
+          <td class="my-auto mx-2">{task.name}</td>
+        </tr>
+        {:else}
+        <tr class="border border-gray-300 h-12 w-full flex flex-row justify-between align-middle">
+          <td class="my-auto mx-2"></td>
+        </tr>
+        {/if}
+      {/each}
+    </table>
 
   </div>
 </Layout>
