@@ -21,9 +21,9 @@ interface Task{
 let currentDate = new Date();
 let months: { month: string, days: Date[] }[] = [];
 
-
+let initial = 12;
 // Loop adds the next 12 months in the months list
-for (let i = 0; i < 12; i++) {
+for (let i = 0; i < initial; i++) {
     let currentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
 
     let daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
@@ -86,6 +86,26 @@ let tasklist: Task[] = [
     }
 ];
 
+function addMonth() {
+    console.log("This addmonths() runs");
+    currentDate.setMonth(currentDate.getMonth() + 1);
+
+    let currentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    let daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+    let monthDays: Date[] = [];
+
+    for (let j = 1; j <= daysInMonth; j++) {
+        let day = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), j);
+        monthDays.push(day);
+    }
+    
+    months.push({ month: currentMonth.toLocaleString('default', { month: 'long' }), days: monthDays });
+
+    // Trigger reactivity to reflect the change in the timeline
+    // This will cause Svelte to re-render the timeline with the new month
+    months = [...months];
+}
+
 
 
 tasklist.sort((a, b) => {
@@ -106,14 +126,28 @@ tasklist.sort((a, b) => {
 let timelineDiv: HTMLDivElement;
 let taskDivs: HTMLDivElement[] = [];
 
+
 function handleScrollTimeline() {
-    return () => {
-    for (let i = 0; i < taskDivs.length; i++) {
-        taskDivs[i].scrollTop = timelineDiv.scrollTop;
-        taskDivs[i].scrollLeft = timelineDiv.scrollLeft;
-    }
+    return (event: Event) => {
+        let timeline = event.target as HTMLElement;
+        for (let i = 0; i < taskDivs.length; i++) {
+            taskDivs[i].scrollTop = timelineDiv.scrollTop;
+            taskDivs[i].scrollLeft = timelineDiv.scrollLeft;
+        }
+
+        // Check if the timeline has reached the end
+        const buffer = 10; // Adjust this value as needed
+
+        if (timeline.scrollLeft >= timeline.scrollWidth - timeline.clientWidth - buffer) {
+            // Reached the end of the horizontal scroll
+           
+            addMonth();
+
+            console.log("I reached the end of the timelines");
+        }
     };
 }
+
 
 function handleScrollTask(index: number) {
     return () => {
@@ -148,6 +182,8 @@ function setRender(index:number){
         tasklist[index].isRendered = false;
     }
 }
+
+
 </script>
 
 <style lang="postcss">
