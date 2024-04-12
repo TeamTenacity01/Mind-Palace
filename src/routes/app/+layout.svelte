@@ -32,7 +32,7 @@
 
 <style lang="postcss">
     .app{
-        @apply grid grid-cols-[5fr_5fr] sm:grid-cols-[3fr_7fr] lg:grid-cols-[1.5fr_8.5fr] h-full overflow-hidden;
+        @apply grid grid-cols-[5fr_5fr] sm:grid-cols-[150px_calc(100vw-150px)] lg:grid-cols-[250px_calc(100vw-250px)] h-full overflow-hidden;
     }
     .app-sidepanel-closed{
         @apply grid grid-cols-[0fr_10fr] h-full;
@@ -109,10 +109,9 @@
         @apply bg-slate-800;
     }
     .screen{
-        @apply p-4 h-full;
+        @apply p-4 h-full overflow-y-scroll;
     }
 </style>
-
 <main class={appClass}>
     <div class="sidepanel-wrapper">
         <section class={sidebarClass}>
