@@ -1,146 +1,98 @@
 <script lang="ts">
-	import Layout from "./+layout.svelte";
-	import { createEventDispatcher } from 'svelte';
+import { onMount } from "svelte";
 
-	const dispatch = createEventDispatcher();
-	let tasks: { text: string, width: number, height: number }[] = [{ text: '', width: 200, height: 100 }];
-	let isResizing: boolean = false;
-	let resizingIndex: number | null = null;
-	let checkWordCount = false;
+interface Task{
+    id: string;
+    name: string;
+    isRendered: boolean;
+    created_at: Date;
+    updated_at: Date;
+    description: string;
+    start_date: Date;
+    due_date: Date;
+    project_id: string;
+    status: string;
+    priority: string;
+    assignee: string[];
+    offset: number;
+}
 
-	let taskClicked: boolean[] = new Array(tasks.length).fill(false); // Initialize array to track clicked state for each task
-  
-	interface Task {
-		id: string;
-		name: string;
-		isRendered: boolean;
-		created_at: Date;
-		updated_at: Date;
-		description: string;
-		start_date: Date;
-		due_date: Date;
-		project_id: string;
-		status: string;
-		priority: string;
-		assignee: string[];
-	}
+// Get the current date
+let currentDate = new Date();
+let months: { month: string, days: Date[] }[] = [];
+
+
+// Loop adds the next 12 months in the months list
+for (let i = 0; i < 12; i++) {
+    let currentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
+
+    let daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+
+    let monthDays: Date[] = [];
+
+    for (let j = 1; j <= daysInMonth; j++) {
+        let day = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), j);
+        monthDays.push(day);
+    }
+    months.push({ month: currentMonth.toLocaleString('default', { month: 'long' }), days: monthDays });
+}
 
 let tasklist: Task[] = [
   {
         id: "uuid4",
         name: "name of task 1",
         isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
+        created_at: currentDate, // Replace with your timestamp object without timezone
+        updated_at: currentDate, // Replace with your timestamp object without timezone
         description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
+        start_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1), // Replace with your timestamp object without timezone
+        due_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7), // Replace with your timestamp object without timezone
         project_id: "uuid4",
         status: "incomplete",
         priority: "1",
-        assignee: []
+        assignee: [],
+        // offset: Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)),
+        offset: 40 * Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).getTime() - months[0].days[0].getTime()) / (1000 * 60 * 60 * 24)),
     },
     {
         id: "uuid4",
-        name: "name of task 2",
+        name: "perhaps this is a longer name",
         isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
+        created_at: currentDate, // Replace with your timestamp object without timezone
+        updated_at: currentDate, // Replace with your timestamp object without timezone
         description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
+        start_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2), // Replace with your timestamp object without timezone
+        due_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 24), // Replace with your timestamp object without timezone
         project_id: "uuid4",
         status: "incomplete",
         priority: "2",
-        assignee: []
+        assignee: [],
+        offset: 40 * Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2).getTime() - months[0].days[0].getTime()) / (1000 * 60 * 60 * 24)),
     },
     {
         id: "uuid6",
         name: "perhaps this is a much longer name",
         isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
+        created_at: currentDate, // Replace with your timestamp object without timezone
+        updated_at: currentDate, // Replace with your timestamp object without timezone
         description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
+        start_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()), // Replace with your timestamp object without timezone
+        due_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 12), // Replace with your timestamp object without timezone
         project_id: "uuid4",
         status: "incomplete",
         priority: "3",
-        assignee: []
-    },
-    {
-        id: "uuid4",
-        name: "WOWOWOEAKDSAODKASOPDKAOWDKPOAWDKOPO",
-        isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
-        description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
-        project_id: "uuid4",
-        status: "incomplete",
-        priority: "4",
-        assignee: []
-    },
-    {
-        id: "uuid4",
-        name: "asdklasdjaldjsaldkjawlkdjalkawjdlawdjawdlkajdlakwsjlka",
-        isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
-        description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
-        project_id: "uuid4",
-        status: "incomplete",
-        priority: "5",
-        assignee: []
-    },
-    {
-        id: "uuid4",
-        name: "afskldjaklsdjaslkdalkdwajk",
-        isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
-        description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
-        project_id: "uuid4",
-        status: "incomplete",
-        priority: "6",
-        assignee: []
-    },
-    {
-        id: "uuid4",
-        name: "asdkalsdjklakldjlkawjdkladwljkajkl",
-        isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
-        description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
-        project_id: "uuid4",
-        status: "incomplete",
-        priority: "7",
-        assignee: []
+        assignee: [],
+        offset: 40 * Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).getTime() - months[0].days[0].getTime()) / (1000 * 60 * 60 * 24)),
     }
 ];
 
-  function setRender(index:number)
-  {
-    if(tasklist[index].isRendered == false)
-    tasklist[index].isRendered = true;
-    else
-    tasklist[index].isRendered = false;
-
-  }
 
 
-  tasklist.sort((a, b) => {
+tasklist.sort((a, b) => {
     // Convert priority strings to numbers for comparison
     const priorityA = parseInt(a.priority);
     const priorityB = parseInt(b.priority);
-    
+
     // Compare priorities
     if (priorityA < priorityB) {
         return -1; // a comes before b
@@ -149,49 +101,67 @@ let tasklist: Task[] = [
     } else {
         return 0; // priorities are equal
     }
+});
+
+let timelineDiv: HTMLDivElement;
+let taskDivs: HTMLDivElement[] = [];
+
+function handleScrollTimeline() {
+    return () => {
+    for (let i = 0; i < taskDivs.length; i++) {
+        taskDivs[i].scrollTop = timelineDiv.scrollTop;
+        taskDivs[i].scrollLeft = timelineDiv.scrollLeft;
+    }
+    };
+}
+
+function handleScrollTask(index: number) {
+    return () => {
+      for (let i = 0; i < taskDivs.length; i++) {
+        if (i !== index) {
+          taskDivs[i].scrollTop = taskDivs[index].scrollTop;
+          taskDivs[i].scrollLeft = taskDivs[index].scrollLeft;
+        }
+      }
+      timelineDiv.scrollTop = taskDivs[index].scrollTop;
+      timelineDiv.scrollLeft = taskDivs[index].scrollLeft;
+    };
+  }
+
+  onMount(() => {
+    timelineDiv.addEventListener('scroll', handleScrollTimeline());
+
+    taskDivs.forEach((div, index) => {
+      const scrollHandler = handleScrollTask(index);
+      div.addEventListener('scroll', scrollHandler);
+    });
+
+    return () => {
+      timelineDiv.removeEventListener('scroll', handleScrollTimeline());
+    };
   });
 
-  
-
-let months: { month: string, days: Date[] }[] = [];
-
-// Get the current date
-let currentDate = new Date();
-
-// Loop through the next 12 months
-for (let i = 0; i < 12; i++) {
-    // Create a new date for the current month
-    let currentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
-
-    // Get the number of days in the current month
-    let daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-
-    // Create an array to hold the days of the current month
-    let monthDays: Date[] = [];
-
-    // Loop through the days of the current month
-    for (let j = 1; j <= daysInMonth; j++) {
-        // Create a new date for each day
-        let day = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), j);
-        
-        // Add the day to the array of days for the current month
-        monthDays.push(day);
+function setRender(index:number){
+    if(tasklist[index].isRendered == false){
+        tasklist[index].isRendered = true;
+    } else {
+        tasklist[index].isRendered = false;
     }
-
-    // Add the array of days and the month label to the array of months
-    months.push({ month: currentMonth.toLocaleString('default', { month: 'long' }), days: monthDays });
 }
 </script>
 
 <style lang="postcss">
 	.btn {
-		@apply border border-gray-300 w-12;
+		@apply border border-gray-300 w-12 mx-2;
 	}
-	.timeline{
-		@apply flex w-full overflow-x-scroll border border-gray-300;
+    .timeline{
+        @apply  border border-gray-300;
+    }
+	.timeline, .task{
+		@apply flex w-full overflow-x-scroll;
 	}
 	.tl-months{
-		@apply flex flex-col  border-y border-gray-300;
+		@apply flex flex-col;
 	}
 	.tl-months > p{
 		@apply ml-2;
@@ -208,54 +178,86 @@ for (let i = 0; i < 12; i++) {
 	.tl-day > p, .tl-day-curr > p{
 		@apply my-auto;
 	}
+    .task{
+        @apply my-2; 
+    }
+    
+    .task-thumb > p{
+        @apply relative w-full h-full;
+    }
+    .task-thumb > p > span{
+        @apply absolute whitespace-nowrap not-italic h-full flex items-center;
+    }
+	.task > td{
+		@apply border border-gray-300 h-[40px] flex flex-col items-center;
+	}
+	.task > td > p{
+		@apply my-auto;
+	}
+    .task::-webkit-scrollbar {
+        @apply hidden;
+    }
+
 </style>
 
 
 <h1 class="mb-20">Team Tenacity</h1>
 
-<div class="timeline">
-	{#each months as month}
-		<div class="tl-months">
-			<p>{month.month}</p>
-			<div class="tl-days">
-				{#each month.days as day}
-					{#if day.toDateString() == currentDate.toDateString()}
-						<div class="tl-day-curr"><p>{day.getDate()}</p></div>
-					{:else}
-						<div class="tl-day"><p>{day.getDate()}</p></div>
-					{/if}
-				{/each}
-			</div>
-		</div>
-	{/each}
+<div class="w-full border border-gray-300 relative">
+    <!-- timeline -->
+    <div class="timeline" bind:this={timelineDiv} on:scroll={handleScrollTimeline()}>
+        {#each months as month}
+            <div class="tl-months">
+                <p>{month.month}</p>
+                <div class="tl-days">
+                    {#each month.days as day}
+                        {#if day.toDateString() == currentDate.toDateString()}
+                            <div class="tl-day-curr"><p>{day.getDate()}</p></div>
+                        {:else}
+                            <div class="tl-day"><p>{day.getDate()}</p></div>
+                        {/if}
+                    {/each}
+                </div>
+            </div>
+        {/each}
+    </div>
+
+    <!-- Tasks on timeline -->
+    <div class="relative">
+        <div class="w-full border border-gray-300">
+            {#each tasklist as task, i}
+                <div class="task relative" bind:this={taskDivs[i]} on:scroll={handleScrollTask(i)}>
+                    {#each months as month}
+                        <div class="tl-months">
+                            <div class="tl-days" style="border-width: 0;">
+                                {#each month.days as day}
+                                    <div class="tl-day"></div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/each}
+                    
+                    {#if task.isRendered}
+                        <td class="task-thumb my-auto absolute" style="width: { 40 * (Math.ceil((task.due_date.getTime() - task.start_date.getTime()) / (1000 * 60 * 60 * 24)) )}px; margin-left: {task.offset}px;">
+                            <p><span>{task.name}</span></p>
+                        </td>
+                    {/if}
+                </div>
+            {/each}
+        </div>
+
+        <!-- Task list -->
+        <table class="border-collapse border border-gray-300 absolute top-0 bg-white">
+            {#each tasklist as task, index}
+                <tr class=" my-2 h-[40px] w-full flex flex-row justify-between align-middle">
+                    <td class="my-auto mx-2">{task.name}</td>
+                    <button class="btn" on:click={() => setRender(index)}>
+                        {task.isRendered ? '+' : '-'}
+                    </button>
+                </tr>
+            {/each}
+        </table>
+    </div>
 </div>
 
-<div class="flex relative">
-	<!-- TaskList -->
-	<table class="border-collapse border border-gray-300 absolute hidden">
-	
-		{#each tasklist as task, index}
-			<tr class="border border-r-0 border-gray-300 h-12 w-full flex flex-row justify-between align-middle">
-				<td class="my-auto mx-2">{task.name}</td>
-				<button class="btn" on:click={() => setRender(index)}>
-					{task.isRendered ? '+' : '-'}
-				</button>
-			</tr>
-		{/each}
-	</table>
 
-	<!-- Rendered table -->
-	<table class="border-collapse border border-gray-300 w-full">
-		{#each tasklist as task}
-			{#if task.isRendered}
-				<tr class="border border-gray-300 h-12 w-full flex flex-row justify-between align-middle">
-					<td class="my-auto mx-2">{task.name}</td>
-				</tr>
-			{:else}
-				<tr class="border border-gray-300 h-12 w-full flex flex-row justify-between align-middle">
-					<td class="my-auto mx-2"></td>
-				</tr>
-			{/if}
-		{/each}
-	</table>
-</div>
