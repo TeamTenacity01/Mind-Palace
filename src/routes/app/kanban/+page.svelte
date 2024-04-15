@@ -4,7 +4,7 @@
 		columns: [
 			{
 				id: 1,
-				label: '📫 Todo'
+				label: 'Todo'
 			},
 			{
 				id: 2,
@@ -16,7 +16,7 @@
 			},
 			{
 				id: 4,
-				label: '✅Done'
+				label: 'Done'
 			}
 		],
 		cards: [
@@ -32,12 +32,12 @@
 			},
 			{
 				column: 3,
-				id: 'b',
+				id: 'c',
 				title: 'Code DND Example'
 			},
 			{
 				column: 4,
-				id: 'b',
+				id: 'd',
 				title: 'Code DND Example'
 			}
 		]
@@ -60,7 +60,7 @@
 			<li
 				class="column"
 				use:dropzone={{
-					on_dropzone(card_id) {
+					on_dropzone(card_id: string) {
 						const card = data.cards.find((c) => c.id === card_id);
 						card.column = column.id;
 						data = data;
@@ -82,28 +82,14 @@
 			</li>
 		{/each}
 	</ul>
-	<div class="plus" on:click={addColumn}>
-		<svg
-			fill="#000000"
-			version="1.1"
-			id="Capa_1"
-			xmlns="http://www.w3.org/2000/svg"
-			xmlns:xlink="http://www.w3.org/1999/xlink"
-			width="60px"
-			height="60px"
-			viewBox="0 0 45.402 45.402"
-			xml:space="preserve"
-		>
+	<button class="plus" on:click={addColumn}>
+		<svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60px" height="60px" viewBox="0 0 45.402 45.402" xml:space="preserve">
 			<g>
-				<path
-					d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141
-		c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
-		c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435
-		c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"
-				/>
+				<path d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141 c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
+						c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435 c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"/>
 			</g>
 		</svg>
-	</div>
+	</button>
 </div>
 
 <style>
@@ -140,31 +126,6 @@
 		margin: 0.75em;
 		font-family: var(--sk-font);
 		accent-color: var(--sk-theme-1);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--sk-back-1: hsl(0, 0%, 10%);
-			--sk-back-2: hsl(0, 0%, 18%);
-			--sk-back-3: hsl(0, 0%, 14%);
-			--sk-back-4: hsl(0, 0%, 22%);
-			--sk-back-5: hsl(0, 0%, 40%);
-			--sk-text-1: hsl(0, 0%, 90%);
-			--sk-text-2: hsl(0, 0%, 80%);
-			--sk-text-3: hsl(0, 0%, 65%);
-		}
-
-		body {
-			color-scheme: dark;
-		}
-
-		a {
-			color: var(--sk-theme-3);
-		}
-
-		a:visited {
-			color: hsl(267, 100%, 75%);
-		}
 	}
 
 	ul {
