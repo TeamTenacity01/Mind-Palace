@@ -1,17 +1,7 @@
-
 <script lang="ts">
-  import Layout from "./+layout.svelte";
-  import { createEventDispatcher } from 'svelte';
+import { onMount } from "svelte";
 
-  const dispatch = createEventDispatcher();
-  let tasks: { text: string, width: number, height: number }[] = [{ text: '', width: 200, height: 100 }];
-  let isResizing: boolean = false;
-  let resizingIndex: number | null = null;
-  let checkWordCount = false;
-
-  let taskClicked: boolean[] = new Array(tasks.length).fill(false); // Initialize array to track clicked state for each task
-  
-  interface Task {
+interface Task{
     id: string;
     name: string;
     isRendered: boolean;
@@ -24,15 +14,12 @@
     status: string;
     priority: string;
     assignee: string[];
-<<<<<<< Updated upstream
-=======
     offset: number;
 }
 
 // Get the current date
 let currentDate = new Date();
 let months: { month: string, days: Date[] }[] = [];
-let atEndOfForwardScroll = false;
 
 let initial = 12;
 // Loop adds the next 12 months in the months list
@@ -48,47 +35,49 @@ for (let i = 0; i < initial; i++) {
         monthDays.push(day);
     }
     months.push({ month: currentMonth.toLocaleString('default', { month: 'long' }), days: monthDays });
->>>>>>> Stashed changes
 }
 
 let tasklist: Task[] = [
   {
         id: "uuid4",
         name: "name of task 1",
-        isRendered: false,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
-        description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
-        project_id: "uuid4",
-        status: "incomplete",
-        priority: "5",
-        assignee: []
-    },
-    {
-        id: "uuid4",
-        name: "name of task 2",
         isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
+        created_at: currentDate, // Replace with your timestamp object without timezone
+        updated_at: currentDate, // Replace with your timestamp object without timezone
         description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
+        start_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1), // Replace with your timestamp object without timezone
+        due_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7), // Replace with your timestamp object without timezone
         project_id: "uuid4",
         status: "incomplete",
         priority: "1",
-        assignee: []
+        assignee: [],
+        // offset: Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)),
+        offset: 40 * Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1).getTime() - months[0].days[0].getTime()) / (1000 * 60 * 60 * 24)),
+    },
+    {
+        id: "uuid4",
+        name: "perhaps this is a longer name",
+        isRendered: true,
+        created_at: currentDate, // Replace with your timestamp object without timezone
+        updated_at: currentDate, // Replace with your timestamp object without timezone
+        description: "description here",
+        start_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2), // Replace with your timestamp object without timezone
+        due_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 24), // Replace with your timestamp object without timezone
+        project_id: "uuid4",
+        status: "incomplete",
+        priority: "2",
+        assignee: [],
+        offset: 40 * Math.ceil((new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2).getTime() - months[0].days[0].getTime()) / (1000 * 60 * 60 * 24)),
     },
     {
         id: "uuid6",
         name: "perhaps this is a much longer name",
         isRendered: true,
-        created_at: new Date(), // Replace with your timestamp object without timezone
-        updated_at: new Date(), // Replace with your timestamp object without timezone
+        created_at: currentDate, // Replace with your timestamp object without timezone
+        updated_at: currentDate, // Replace with your timestamp object without timezone
         description: "description here",
-        start_date: new Date(), // Replace with your timestamp object without timezone
-        due_date: new Date(), // Replace with your timestamp object without timezone
+        start_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()), // Replace with your timestamp object without timezone
+        due_date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 12), // Replace with your timestamp object without timezone
         project_id: "uuid4",
         status: "incomplete",
         priority: "1",
@@ -152,88 +141,21 @@ let tasklist: Task[] = [
     }
 ];
 
-<<<<<<< Updated upstream
   function setRender(index:number)
   {
     if(tasklist[index].isRendered == false)
     tasklist[index].isRendered = true;
     else
     tasklist[index].isRendered = false;
-=======
-function addMonth() {
-    console.log("This addmonths() runs");
-    currentDate.setMonth(currentDate.getMonth()+1);
->>>>>>> Stashed changes
 
   }
 
 
-<<<<<<< Updated upstream
   tasklist.sort((a, b) => {
-=======
-function shiftTimeline() {
-    if (atEndOfForwardScroll) {
-        // Remove the first 6 months
-        months.splice(0, 6);
-
-       
-        for (let i = 0; i < 6; i++) {
-            addMonth();
-        }
-
-        // Calculate the middle index
-        const middleIndex = Math.floor(months.length / 2);
-
-        // Calculate the cumulative width of months leading up to the middle
-        let cumulativeWidth = 0;
-        for (let i = 0; i < middleIndex; i++) {
-            cumulativeWidth += months[i].days.length * 40; // Assuming each day cell has a width of 40px
-        }
-
-        // Set the scroll position to the middle
-        timelineDiv.scrollLeft = cumulativeWidth;
-    }
-}
-function shiftTimelineBackwards() {
-    if (!atEndOfForwardScroll) {
-        // Remove the last 6 months
-        if (!atEndOfForwardScroll) {
-    // Add 6 months before the original first month
-    for (let i = 1; i <= 6; i++) {
-        const prevMonth = new Date(months[0].days[0]);
-        prevMonth.setMonth(prevMonth.getMonth() - 1);
-        months.unshift({
-            month: prevMonth.toLocaleString('default', { month: 'long' }),
-            days: Array.from({ length: new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate() }, (_, i) => new Date(prevMonth.getFullYear(), prevMonth.getMonth(), i + 1))
-        });
-    }
-    // Remove the last 6 months
-    months.splice(months.length - 6, 6);
-}
-
-
-        // Calculate the cumulative width of the added months
-        let cumulativeWidth = 0;
-        for (let i = 0; i < 6; i++) {
-            cumulativeWidth += months[i].days.length * 40; // Assuming each day cell has a width of 40px
-        }
-
-        // Set the scroll position to the cumulative width
-        timelineDiv.scrollLeft = cumulativeWidth;
-        months = [...months];
-    }
-}
-
-
-
-
-
-tasklist.sort((a, b) => {
->>>>>>> Stashed changes
     // Convert priority strings to numbers for comparison
     const priorityA = parseInt(a.priority);
     const priorityB = parseInt(b.priority);
-    
+
     // Compare priorities
     if (priorityA < priorityB) {
         return -1; // a comes before b
@@ -243,129 +165,107 @@ tasklist.sort((a, b) => {
         return 0; // priorities are equal
     }
 });
-<<<<<<< Updated upstream
   
-=======
-
-let timelineDiv: HTMLDivElement;
-let taskDivs: HTMLDivElement[] = [];
-
-
-function handleScrollTimeline() {
-    return (event: Event) => {
-        let timeline = event.target as HTMLElement;
-        for (let i = 0; i < taskDivs.length; i++) {
-            taskDivs[i].scrollTop = timelineDiv.scrollTop;
-            taskDivs[i].scrollLeft = timelineDiv.scrollLeft;
-        }
-
-        // Check if the timeline has reached the end
-        const buffer = 10; // Adjust this value as needed
-
-        if (timeline.scrollLeft >= timeline.scrollWidth - timeline.clientWidth - buffer) {
-            // Reached the end of the horizontal scroll
-           
-            atEndOfForwardScroll = true;
-
-            console.log("I reached the end of the timelines");
-        }
-        else
-            {
-                atEndOfForwardScroll=false;
-            }
-    };
-}
-
-
-function handleScrollTask(index: number) {
-    return () => {
-      for (let i = 0; i < taskDivs.length; i++) {
-        if (i !== index) {
-          taskDivs[i].scrollTop = taskDivs[index].scrollTop;
-          taskDivs[i].scrollLeft = taskDivs[index].scrollLeft;
-        }
-      }
-      timelineDiv.scrollTop = taskDivs[index].scrollTop;
-      timelineDiv.scrollLeft = taskDivs[index].scrollLeft;
-    };
-  }
-
-  onMount(() => {
-    timelineDiv.addEventListener('scroll', handleScrollTimeline());
-
-    taskDivs.forEach((div, index) => {
-      const scrollHandler = handleScrollTask(index);
-      div.addEventListener('scroll', scrollHandler);
-    });
-
-    return () => {
-      timelineDiv.removeEventListener('scroll', handleScrollTimeline());
-    };
-  });
-
-function setRender(index:number){
-    if(tasklist[index].isRendered == false){
-        tasklist[index].isRendered = true;
-    } else {
-        tasklist[index].isRendered = false;
-    }
-}
-
-function scrollForward()
-{
-    timelineDiv.scrollLeft += 100;
-}
->>>>>>> Stashed changes
 </script>
 
-<!--First task-->
-<Layout title="Project Roadmap">
-  <div class="flex gap-6">
-    <table class="border-collapse border border-gray-300">
-        {#each tasklist as task}
-        <tr>
-            <td class="border border-gray-300 p-4 w-48 h-15">{task.name}</td>
-        </tr>
-        {/each}
-    </table>
+<style lang="postcss">
+	.btn {
+		@apply border border-gray-300 w-12 mx-2;
+	}
+    .timeline{
+        @apply  border border-gray-300;
+    }
+	.timeline, .task{
+		@apply flex w-full overflow-x-scroll;
+	}
+	.tl-months{
+		@apply flex flex-col;
+	}
+	.tl-months > p{
+		@apply ml-2;
+	}
+	.tl-days{
+		@apply flex border border-gray-300 align-middle;
+	}
+	.tl-day {
+		@apply w-[40px] h-[40px] text-center flex justify-center;
+	}
+	.tl-day-curr {
+		@apply  w-[40px] h-[40px] text-center flex justify-center bg-slate-600 text-white;
+	}
+	.tl-day > p, .tl-day-curr > p{
+		@apply my-auto;
+	}
+    .task{
+        @apply my-2; 
+    }
+    
+    .task-thumb > p{
+        @apply relative w-full h-full;
+    }
+    .task-thumb > p > span{
+        @apply absolute whitespace-nowrap not-italic h-full flex items-center;
+    }
+	.task > td{
+		@apply border border-gray-300 h-[40px] flex flex-col items-center;
+	}
+	.task > td > p{
+		@apply my-auto;
+	}
+    .task::-webkit-scrollbar {
+        @apply hidden;
+    }
 
-    <!--Renderer Table if render or not so the + or - -->
-    <table class="border-collapse border border-gray-300">
-        {#each tasklist as task, index}
-        <tr>
-            <td class="border border-gray-300 p-4 cursor-pointer" on:click={() => setRender(index)}>
-                {#if task.isRendered}
-                  <button class="btn">+</button>
-                {:else}
-                  <button class="btn">-</button>
-                {/if}
-            </td>
-        </tr>
-        {/each}
-    </table>
+</style>
 
-<<<<<<< Updated upstream
+
+<h1 class="mb-20">Team Tenacity</h1>
+
+<div class="w-full border border-gray-300 relative">
+    <!-- timeline -->
+    <div class="timeline" bind:this={timelineDiv} on:scroll={handleScrollTimeline()}>
+        {#each months as month}
+            <div class="tl-months">
+                <p>{month.month}</p>
+                <div class="tl-days">
+                    {#each month.days as day}
+                        {#if day.toDateString() == currentDate.toDateString()}
+                            <div class="tl-day-curr"><p>{day.getDate()}</p></div>
+                        {:else}
+                            <div class="tl-day"><p>{day.getDate()}</p></div>
+                        {/if}
+                    {/each}
+                </div>
+            </div>
+        {/each}
+    </div>
+
+    <!-- Tasks on timeline -->
+    <div class="relative">
+        <div class="w-full border border-gray-300">
+            {#each tasklist as task, i}
+                <div class="task relative" bind:this={taskDivs[i]} on:scroll={handleScrollTask(i)}>
+                    {#each months as month}
+                        <div class="tl-months">
+                            <div class="tl-days" style="border-width: 0;">
+                                {#each month.days as day}
+                                    <div class="tl-day"></div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/each}
+                    
+                    {#if task.isRendered}
+                        <td class="task-thumb my-auto absolute" style="width: { 40 * (Math.ceil((task.due_date.getTime() - task.start_date.getTime()) / (1000 * 60 * 60 * 24)) )}px; margin-left: {task.offset}px;">
+                            <p><span>{task.name}</span></p>
+                        </td>
+                    {/if}
+                </div>
+            {/each}
+        </div>
+
     <!-- Vertical line -->
     <div class="border-l border-gray-300 h-full"></div>
-=======
-        <!-- Task list -->
-        <table class="border-collapse border border-gray-300 absolute top-0 bg-white">
-            {#each tasklist as task, index}
-                <tr class=" my-2 h-[40px] w-full flex flex-row justify-between align-middle">
-                    <td class="my-auto mx-2">{task.name}</td>
-                    <button class="btn" on:click={() => setRender(index)}>
-                        {task.isRendered ? '+' : '-'}
-                    </button>
-                </tr>
-            {/each}
-        </table>
-    </div>
-</div>
-<div class="timeline-controls">
-    <button class="btn" on:click={shiftTimelineBackwards}>Backwards</button>
-    <button class="btn" on:click={shiftTimeline}>Forward</button>
-</div>
->>>>>>> Stashed changes
 
   <!-- Rendered table -->
 <table class="border-collapse border border-gray-300">
