@@ -21,6 +21,8 @@
     let currentDate = new Date();
     let months: { month: string, days: Date[] }[] = [];
     
+    let atEndOfForwardScroll = false;
+
     let initial = 12;
     // Loop adds the next 12 months in the months list
     for (let i = 0; i < initial; i++) {
@@ -141,10 +143,12 @@
             if (timeline.scrollLeft >= timeline.scrollWidth - timeline.clientWidth - buffer) {
                 // Reached the end of the horizontal scroll
                
-                addMonth();
+                atEndOfForwardScroll = true;
     
                 console.log("I reached the end of the timelines");
             }
+            else
+            atEndOfForwardScroll = false;
         };
     }
     
@@ -183,7 +187,59 @@
         }
     }
     
-    
+    let runOnce = true;
+    function shiftTimeline() {
+    if (atEndOfForwardScroll) {
+        // Remove the first 6 months
+        months.splice(0, 6);
+        if(runOnce)
+        {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            runOnce =false;
+        }
+       
+        for (let i = 0; i < 6; i++) {
+            addMonth();
+        }
+        // Calculate the middle index
+        const middleIndex = Math.floor(months.length / 2);
+        // Calculate the cumulative width of months leading up to the middle
+        let cumulativeWidth = 0;
+        for (let i = 0; i < middleIndex; i++) {
+            cumulativeWidth += months[i].days.length * 40; // Assuming each day cell has a width of 40px
+        }
+        // Set the scroll position to the middle
+        timelineDiv.scrollLeft = cumulativeWidth;
+    }
+}
+function shiftTimelineBackwards() {
+    if (!atEndOfForwardScroll) {
+        // Remove the last 6 months
+        if (!atEndOfForwardScroll) {
+    // Add 6 months before the original first month
+    for (let i = 1; i <= 6; i++) {
+        const prevMonth = new Date(months[0].days[0]);
+        prevMonth.setMonth(prevMonth.getMonth() - 1);
+        months.unshift({
+            month: prevMonth.toLocaleString('default', { month: 'long' }),
+            days: Array.from({ length: new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate() }, (_, i) => new Date(prevMonth.getFullYear(), prevMonth.getMonth(), i + 1))
+        });
+    }
+    // Remove the last 6 months
+    months.splice(months.length - 6, 6);
+}
+        // Calculate the cumulative width of the added months
+        let cumulativeWidth = 0;
+        for (let i = 0; i < 6; i++) {
+            cumulativeWidth += months[i].days.length * 40; // Assuming each day cell has a width of 40px
+        }
+        // Set the scroll position to the cumulative width
+        timelineDiv.scrollLeft = cumulativeWidth;
+        months = [...months];
+    }
+}
+
+
     </script>
     
     <style lang="postcss">
@@ -244,7 +300,7 @@
         <div class="timeline" bind:this={timelineDiv} on:scroll={handleScrollTimeline()}>
             {#each months as month}
                 <div class="tl-months">
-                    <p>{month.month}</p>
+                    <p>{month.month} {month.days[0].getFullYear()}</p>
                     <div class="tl-days">
                         {#each month.days as day}
                             {#if day.toDateString() == currentDate.toDateString()}
@@ -294,6 +350,10 @@
                 {/each}
             </table>
         </div>
+    </div>
+    <div class="timeline-controls">
+        <button class="btn" on:click={shiftTimelineBackwards}>Backwards</button>
+        <button class="btn" on:click={shiftTimeline}>Forward</button>
     </div>
     
     
