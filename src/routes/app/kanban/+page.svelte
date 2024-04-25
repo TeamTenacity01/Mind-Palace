@@ -1,98 +1,160 @@
-<script>
-	import { dropzone, draggable } from './dnd';
-	let data = {
-		columns: [
-			{
-				id: 1,
-				label: 'Todo'
-			},
-			{
-				id: 2,
-				label: 'In Progress'
-			},
-			{
-				id: 3,
-				label: 'Awaiting Merge'
-			},
-			{
-				id: 4,
-				label: 'Done'
-			}
-		],
-		cards: [
-			{
-				column: 1,
-				id: 'a',
-				title: 'Wash Dishes'
-			},
-			{
-				column: 2,
-				id: 'b',
-				title: 'Code DND Example'
-			},
-			{
-				column: 3,
-				id: 'c',
-				title: 'Code DND Example'
-			},
-			{
-				column: 4,
-				id: 'd',
-				title: 'Code DND Example'
-			}
-		]
-	};
-	function addColumn() {
-		const newColumnId = data.columns.length + 1; // Generate a new ID for the column
-		const newColumn = {
-			id: newColumnId,
-			label: `New Column ${newColumnId}` // Customize this label as needed
-		};
-		data.columns = [...data.columns, newColumn]; // Add the new column to the columns array
-	}
+<script lang="ts">
+    import { dropzone, draggable } from './dnd';
+
+    // Define types for your columns and cards
+    type Column = {
+        id: number;
+        label: string;
+    };
+
+    type Card = {
+        column: number;
+        id: string;
+        title: string;
+    };
+
+    type Data = {
+        columns: Column[];
+        cards: Card[];
+    };
+
+    let editingColumnId: number | null = null;
+
+    // Define the initial data with explicit types
+    let data: Data = {
+        columns: [
+            { id: 1, label: 'Todo' },
+            { id: 2, label: 'In Progress' },
+            { id: 3, label: 'Awaiting Merge' },
+            { id: 4, label: 'Done' }
+        ],
+        cards: [
+            { column: 1, id: 'a', title: 'khanh Dishes', },
+						 { column: 2, id: 'b', title: 'Wash Dishes', },
+						  { column: 3, id: 'c', title: 'Wash Dishes', },
+            { column: 4, id: 'd', title: 'Code DND Example' },
+            { column: 5, id: 'g', title: 'Code DND Example' },
+            { column: 6, id: 'f', title: 'Code DND Example' }
+        ]
+    }
+function addCard(columnId:number): void {
+    const newCardId: string = generateUniqueId();
+    const newCard: Card = {
+        column: columnId,
+        id: newCardId,
+        title: `New Card ${newCardId}`
+    };
+    data.cards = [...data.cards, newCard];
+}
+
+function generateUniqueId(): string {
+    // Generate a unique ID (you can use any method you prefer)
+    return Math.random().toString(36).substr(2, 9);
+}
+
+    function addColumn(): void {
+        const newColumnId: number = data.columns.length + 1;
+        const newColumn: Column = {
+            id: newColumnId,
+            label: `New Column ${newColumnId}`
+        };
+        data.columns = [...data.columns, newColumn];
+    }
+
+    function startEditing(id: number): void {
+        editingColumnId = id;
+    }
+
+    function stopEditing(label: string, id: number): void {
+        const column = data.columns.find(c => c.id === id);
+        if (column) {
+            column.label = label;
+        }
+        editingColumnId = null;
+    }
+
+		  const startEditingColumn = (id: number) => {
+    startEditing(id);
+    // Use $: reactive statement to ensure focus is set after startEditing is called
+    $: if (editingColumnId === id) {
+      // Focus on the input field
+      const input = document.querySelector(`#column-input-${id}`) as HTMLInputElement;
+      input.focus();
+    }
+  };
+
+
+
 </script>
 
-<div class="container">
-	<ul>
-		{#each data.columns as column}
-			{@const cards = data.cards.filter((c) => c.column === column.id)}
 
-			<li
-				class="column"
-				use:dropzone={{
-					on_dropzone(card_id: string) {
-						const card = data.cards.find((c) => c.id === card_id);
-						card.column = column.id;
-						data = data;
-					}
-				}}
-			>
-				<h2>{column.label}</h2>
-				{#if cards.length > 0}
-					<ul class="cards">
-						{#each cards as card}
-							<li use:draggable={card.id}>
-								{card.title}
-							</li>
-						{/each}
-					</ul>
-				{:else}
-					<p>No Cards...</p>
-				{/if}
-			</li>
-		{/each}
-	</ul>
+<div class="container">
+
+<ul>
+	{#each data.columns as column}
+		{@const cards = data.cards.filter((c) => c.column === column.id)}
+		<li
+			class="column"
+			use:dropzone={{
+				on_dropzone(card_id) {
+					const card = data.cards.find((c) => c.id === card_id);
+					card.column = column.id;
+					data = data;
+				}
+			}}
+		>
+		   {#if editingColumnId === column.id}
+        <input   id={"column-input-" + column.id} type="text" bind:value={column.label} on:blur={() => stopEditing(column.label, column.id)} />
+      {:else}
+        <h2 on:click={() => startEditingColumn(column.id)}>{column.label}</h2>
+      {/if}
+			{#if cards.length > 0}
+				<ul class="cards">
+					{#each cards as card}
+						<li use:draggable={card.id}>
+							{card.title}
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<p>No Cards...</p>
+			{/if}
+			<div class="addItem"><div class="text" on:click={()=> addCard(column.id)} > Add Item</div> </div>
+		</li>
+	{/each}
+</ul>
+
 	<button class="plus" on:click={addColumn}>
-		<svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60px" height="60px" viewBox="0 0 45.402 45.402" xml:space="preserve">
+		<svg
+			fill="#000000"
+			version="1.1"
+			id="Capa_1"
+			xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			width="60px"
+			height="60px"
+			viewBox="0 0 45.402 45.402"
+			xml:space="preserve"
+		>
 			<g>
-				<path d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141 c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
-						c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435 c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"/>
+				<path
+					d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141 c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27
+						c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435 c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"
+				/>
 			</g>
 		</svg>
 	</button>
 </div>
 
 <style>
+	.addItem {
+		position: absolute;
+		bottom: 0;
+
+	}
+	.text:hover {
+		background-color: rgba(243, 243, 243, 0.957);
+	}
 	.container {
 		display: flex;
 	}
@@ -146,7 +208,13 @@
 
 	.column {
 		min-width: 25ch;
+		position: relative;
+		padding-bottom: 40px;
 	}
+
+	/* [id*="column-input-"]{
+
+	} */
 
 	h2 {
 		margin-block-start: 0;
