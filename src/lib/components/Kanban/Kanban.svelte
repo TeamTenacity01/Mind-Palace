@@ -29,7 +29,7 @@
         ],
         cards: [
 			{ column: 2, id: 'b', title: 'Attend The Banquet', },
-			{ column: 3, id: 'c', title: 'Build Amazing Tool', },
+			{ column: 3, id: 'a', title: 'Build Amazing Tool', },
 			{ column: 1, id: 'c', title: 'Blow Everyone Away', },
         ]
     }
