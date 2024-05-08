@@ -1,128 +1,161 @@
 <script lang="ts">
-    import { dropzone, draggable } from './dnd';
+	import { dropzone, draggable } from './dnd';
 
-    // Define types for your columns and cards
-    type Column = {
-        id: number;
-        label: string;
-    };
+	// Define types for your columns and cards
+	type Column = {
+		id: number;
+		label: string;
+	};
 
-    type Card = {
-        column: number;
-        id: string;
-        title: string;
-    };
+	type Card = {
+		column: number;
+		id: string;
+		title: string;
+	};
 
-    type Data = {
-        columns: Column[];
-        cards: Card[];
-    };
+	type Data = {
+		columns: Column[];
+		cards: Card[];
+	};
 
-    let editingColumnId: number | null = null;
+	let editingColumnId: number | null = null;
 
-    // Define the initial data with explicit types
-    let data: Data = {
-        columns: [
-            { id: 1, label: 'Todo' },
-            { id: 2, label: 'In Progress' },
-            { id: 3, label: 'Awaiting Merge' },
-            { id: 4, label: 'Done' }
-        ],
-        cards: [
-            { column: 1, id: 'a', title: 'khanh Dishes', },
-						 { column: 2, id: 'b', title: 'Wash Dishes', },
-						  { column: 3, id: 'c', title: 'Wash Dishes', },
-            { column: 4, id: 'd', title: 'Code DND Example' },
-            { column: 5, id: 'g', title: 'Code DND Example' },
-            { column: 6, id: 'f', title: 'Code DND Example' }
-        ]
-    }
-function addCard(columnId:number): void {
-    const newCardId: string = generateUniqueId();
-    const newCard: Card = {
-        column: columnId,
-        id: newCardId,
-        title: `New Card ${newCardId}`
-    };
-    data.cards = [...data.cards, newCard];
-}
+	// Define the initial data with explicit types
+	let data: Data = {
+		columns: [
+			{ id: 1, label: 'Todo' },
+			{ id: 2, label: 'In Progress' },
+			{ id: 3, label: 'Awaiting Merge' },
+			{ id: 4, label: 'Done' }
+		],
+		cards: [
+			{ column: 1, id: 'a', title: 'khanh Dishes' },
+			{ column: 2, id: 'b', title: 'Wash Dishes' },
+			{ column: 3, id: 'c', title: 'Wash Dishes' },
+			{ column: 4, id: 'd', title: 'Code DND Example' },
+			{ column: 5, id: 'g', title: 'Code DND Example' },
+			{ column: 6, id: 'f', title: 'Code DND Example' }
+		]
+	};
+	function addCard(columnId: number): void {
+		const newCardId: string = generateUniqueId();
+		const newCard: Card = {
+			column: columnId,
+			id: newCardId,
+			title: `New Card ${newCardId}`
+		};
+		data.cards = [...data.cards, newCard];
+	}
 
-function generateUniqueId(): string {
-    // Generate a unique ID (you can use any method you prefer)
-    return Math.random().toString(36).substr(2, 9);
-}
+	function generateUniqueId(): string {
+		// Generate a unique ID (you can use any method you prefer)
+		return Math.random().toString(36).substr(2, 9);
+	}
 
-    function addColumn(): void {
-        const newColumnId: number = data.columns.length + 1;
-        const newColumn: Column = {
-            id: newColumnId,
-            label: `New Column ${newColumnId}`
-        };
-        data.columns = [...data.columns, newColumn];
-    }
+	function addColumn(): void {
+		const newColumnId: number = data.columns.length + 1;
+		const newColumn: Column = {
+			id: newColumnId,
+			label: `New Column ${newColumnId}`
+		};
+		data.columns = [...data.columns, newColumn];
+	}
 
-    function startEditing(id: number): void {
-        editingColumnId = id;
-    }
+	function startEditing(id: number): void {
+		editingColumnId = id;
+	}
 
-    function stopEditing(label: string, id: number): void {
-        const column = data.columns.find(c => c.id === id);
-        if (column) {
-            column.label = label;
-        }
-        editingColumnId = null;
-    }
+	function stopEditing(label: string, id: number): void {
+		const column = data.columns.find((c) => c.id === id);
+		if (column) {
+			column.label = label;
+		}
+		editingColumnId = null;
+	}
 
-		  const startEditingColumn = (id: number) => {
-    startEditing(id);
-    // Use $: reactive statement to ensure focus is set after startEditing is called
-    $: if (editingColumnId === id) {
-      // Focus on the input field
-      const input = document.querySelector(`#column-input-${id}`) as HTMLInputElement;
-      input.focus();
-    }
-  };
-
-
-
+	const startEditingColumn = (id: number) => {
+		startEditing(id);
+		// Use $: reactive statement to ensure focus is set after startEditing is called
+		$: if (editingColumnId === id) {
+			// Focus on the input field
+			const input = document.querySelector(`#column-input-${id}`) as HTMLInputElement;
+			input.focus();
+		}
+	};
+	function deleteColumn(columnId: number): void {
+		data.columns = data.columns.filter((column) => column.id !== columnId);
+	}
 </script>
 
-
 <div class="container">
-
-<ul>
-	{#each data.columns as column}
-		{@const cards = data.cards.filter((c) => c.column === column.id)}
-		<li
-			class="column"
-			use:dropzone={{
-				on_dropzone(card_id) {
-					const card = data.cards.find((c) => c.id === card_id);
-					card.column = column.id;
-					data = data;
-				}
-			}}
-		>
-		   {#if editingColumnId === column.id}
-        <input   id={"column-input-" + column.id} type="text" bind:value={column.label} on:blur={() => stopEditing(column.label, column.id)} />
-      {:else}
-        <h2 on:click={() => startEditingColumn(column.id)}>{column.label}</h2>
-      {/if}
-			{#if cards.length > 0}
-				<ul class="cards">
-					{#each cards as card}
-						<li use:draggable={card.id}>
-							{card.title}
-						</li>
-					{/each}
-				</ul>
-			{:else}
-				<p>No Cards...</p>
-			{/if}
-			<div class="addItem"><div class="text" on:click={()=> addCard(column.id)} > Add Item</div> </div>
-		</li>
-	{/each}
-</ul>
+	<ul>
+		{#each data.columns as column}
+			{@const cards = data.cards.filter((c) => c.column === column.id)}
+			<li
+				class="column"
+				use:dropzone={{
+					on_dropzone(card_id) {
+						const card = data.cards.find((c) => c.id === card_id);
+						card.column = column.id;
+						data = data;
+					}
+				}}
+			>
+				<div on:click={() => deleteColumn(column.id)}>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						x="0px"
+						y="0px"
+						width="18"
+						height="18"
+						viewBox="0 0 24 24"
+						class="xsvg"
+					>
+						<path
+							d="M12,2C6.47,2,2,6.47,2,12s4.47,10,10,10s10-4.47,10-10S17.53,2,12,2z M17,15.59L15.59,17L12,13.41L8.41,17L7,15.59 L10.59,12L7,8.41L8.41,7L12,10.59L15.59,7L17,8.41L13.41,12L17,15.59z"
+						></path>
+					</svg>
+				</div>
+				{#if editingColumnId === column.id}
+					<input
+						id={'column-input-' + column.id}
+						type="text"
+						bind:value={column.label}
+						on:blur={() => stopEditing(column.label, column.id)}
+					/>
+				{:else}
+					<h2 on:click={() => startEditingColumn(column.id)}>{column.label}</h2>
+				{/if}
+				{#if cards.length > 0}
+					<ul class="cards">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							x="0px"
+							y="0px"
+							width="18"
+							height="18"
+							viewBox="0 0 24 24"
+							class="xsvg2"
+						>
+							<path
+								d="M12,2C6.47,2,2,6.47,2,12s4.47,10,10,10s10-4.47,10-10S17.53,2,12,2z M17,15.59L15.59,17L12,13.41L8.41,17L7,15.59 L10.59,12L7,8.41L8.41,7L12,10.59L15.59,7L17,8.41L13.41,12L17,15.59z"
+							></path>
+						</svg>
+						{#each cards as card}
+							<li use:draggable={card.id}>
+								{card.title}
+							</li>
+						{/each}
+					</ul>
+				{:else}
+					<p>No Cards...</p>
+				{/if}
+				<div class="addItem">
+					<div class="text" on:click={() => addCard(column.id)}>Add Item</div>
+				</div>
+			</li>
+		{/each}
+	</ul>
 
 	<button class="plus" on:click={addColumn}>
 		<svg
@@ -147,10 +180,23 @@ function generateUniqueId(): string {
 </div>
 
 <style>
+	.xsvg2 {
+		position: relative;
+		top: -0.5em;
+		right: -0.5em;
+	}
+	.xsvg {
+		position: absolute;
+		top: -0.5em;
+		right: -0.5em;
+	}
+	.xsvg:hover {
+		width: 28px;
+		height: 28px;
+	}
 	.addItem {
 		position: absolute;
 		bottom: 0;
-
 	}
 	.text:hover {
 		background-color: rgba(243, 243, 243, 0.957);
