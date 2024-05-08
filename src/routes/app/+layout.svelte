@@ -52,7 +52,7 @@
 
     /* Bro I overengineered this fucking close sidebar btn just because i wanted it to look good */
     .close-btn{
-        @apply absolute -right-4 bottom-1/2 w-2 h-12;
+        @apply absolute -right-3 bottom-1/2 w-2 h-12;
     }
     [class^="th-"] {
         @apply border border-slate-900 bg-slate-900 rounded-lg w-2 h-5 absolute top-3;
@@ -109,7 +109,7 @@
         @apply bg-slate-800;
     }
     .screen{
-        @apply p-4 h-full overflow-y-scroll;
+        @apply p-4 overflow-y-auto;
     }
 </style>
 <main class={appClass}>
