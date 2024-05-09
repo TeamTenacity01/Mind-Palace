@@ -6,7 +6,7 @@
         @apply grid grid-cols-3 p-3;
     }
     .form-input{
-        @apply p-5;
+        
     }
     .inputs{
         @apply grid grid-rows-3 justify-items-start content-between;
@@ -30,7 +30,7 @@
         @apply border border-black rounded-lg text-lg w-48;
     }
     input{
-        @apply border border-black rounded-lg text-base p-1;
+        @apply border border-black rounded-lg py-1 sm:px-1 px-0 lg:text-lg sm:text-sm text-xs;
     }
     h3{
         @apply font-bold;
