@@ -1,5 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import Fa from 'svelte-fa'
+    import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
     
     interface Task{
         id: string;
@@ -133,6 +135,7 @@
     
     let timelineDiv: HTMLDivElement;
     let taskDivs: HTMLDivElement[] = [];
+    let additembtn: HTMLDivElement;
     
     
     function handleScrollTimeline() {
@@ -141,6 +144,17 @@
                 taskDivs[i].scrollTop = timelineDiv.scrollTop;
                 taskDivs[i].scrollLeft = timelineDiv.scrollLeft;
             }
+        };
+    }
+
+    function handleScrollAdd(){
+        return () => {
+            for (let i = 0; i < taskDivs.length; i++) {
+                taskDivs[i].scrollTop = additembtn.scrollTop;
+                taskDivs[i].scrollLeft = additembtn.scrollLeft;
+            }
+            timelineDiv.scrollTop = additembtn.scrollTop;
+            timelineDiv.scrollLeft = additembtn.scrollLeft;
         };
     }
     
@@ -166,6 +180,8 @@
           const scrollHandler = handleScrollTask(index);
           div.addEventListener('scroll', scrollHandler);
         });
+
+        taskDivs.push(additembtn);
     
         return () => {
           timelineDiv.removeEventListener('scroll', handleScrollTimeline());
@@ -181,12 +197,46 @@
         }
     }
 
+    function addTask() {
+        // Generate a new unique ID for the task (you can use a UUID library or any other method)
+        const newTaskId = "uuid" + (tasklist.length + 1);
+
+        const currDate = new Date(); 
+        currDate.setDate(currentDate.getDate() - 1);
+
+        const dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 6);
+        
+        // Create a new task object with default values or prompt the user for input
+        const newTask: Task = {
+            id: newTaskId,
+            name: "New Task",
+            isRendered: true,
+            created_at: new Date(),
+            updated_at: new Date(),
+            description: "",
+            start_date: currDate,
+            due_date: dueDate,
+            project_id: "",
+            status: "incomplete",
+            priority: "1",
+            assignee: [],
+        };
+        
+        // Add the new task to the tasklist array
+        tasklist.push(newTask);
+        tasklist = [...tasklist];
+
+        timelineDiv.scrollLeft += 1;
+    }
+
 </script>
     
     <style lang="postcss">
         .btn {
-            @apply border border-gray-300 w-12 mx-2;
+            @apply flex justify-center items-center opacity-70;
         }
+
         .timeline{
             @apply  border-x border-gray-300;
         }
@@ -289,6 +339,18 @@
                         {/if}
                     </div>
                 {/each}
+
+                <div class="task relative my-3" bind:this={additembtn} on:scroll={handleScrollAdd()}>
+                    {#each months as month}
+                        <div class="tld-months">
+                            <div class="tl-days" style="border-width: 0;">
+                                {#each month.days as day}
+                                    <div class="tl-day"></div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/each}
+                </div>
             </div>
     
             <!-- Task list -->
@@ -297,10 +359,17 @@
                     <tr class=" my-2 h-[40px] w-[360px] flex flex-row justify-between align-middle">
                         <td class="my-auto mx-2">{task.name}</td>
                         <button class="btn" on:click={() => setRender(index)}>
-                            {task.isRendered ? '-' : '+'}
+                            {#if task.isRendered}
+                                <Fa icon={faEyeSlash} size="0.9x"/>
+                            {:else}
+                                <Fa icon={faEye} size="0.9x"/>
+                            {/if}
                         </button>
                     </tr>
                 {/each}
+                    <tr role="button" on:click={addTask} class=" my-3 mx-2 h-[40px] w-[360px] flex flex-row justify-between align-middle border border-gray-300 rounded-lg">
+                        <td class="my-auto mx-auto ">﹢Add Item</td>
+                    </tr>
             </table>
         </div>
     </div>

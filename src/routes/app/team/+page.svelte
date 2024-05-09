@@ -47,21 +47,23 @@
     }
 </style>
 
-<h1 class="mb-8 screen-header">Team Tenacity</h1>
-<section>
-    <div class="view-list">
-        {#each views as view}
-            <button class="view-option {activeTab === view ? 'active-tab' : ''}" on:click={() => changeView(view.component, view)}>
-                {view.label}
+<div class=" h-full flex flex-col">
+    <h1 class="mb-8 screen-header">Team Tenacity</h1>
+    <section class="">
+        <div class="view-list">
+            {#each views as view}
+                <button class="view-option {activeTab === view ? 'active-tab' : ''}" on:click={() => changeView(view.component, view)}>
+                    {view.label}
+                </button>
+            {/each}
+            <button class="view-option">
+                +
             </button>
-        {/each}
-        <button class="view-option">
-            +
-        </button>
-    </div>
-    <hr class="mb-8">
+        </div>
+        <hr class="mb-8">
 
-    <div class="w-full overflow-x-auto pb-6">
-        <svelte:component this={currentComponent}></svelte:component>
-    </div>
-</section>
+        <div class="w-full overflow-x-auto pb-6">
+            <svelte:component this={currentComponent}></svelte:component>
+        </div>
+    </section>
+</div>
