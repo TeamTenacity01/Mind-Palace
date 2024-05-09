@@ -6,7 +6,7 @@
 
 <style lang="postcss">
     .view{
-        @apply grid grid-cols-[2fr_1fr] gap-4;
+        @apply grid grid-cols-[2fr_1fr] gap-4 w-full;
     }
     .header{
         @apply mb-8;
@@ -25,7 +25,7 @@
     }
 
     .teamlink{
-        @apply grid items-center justify-center  text-center border border-black rounded-full w-24 h-24;
+        @apply grid items-center justify-center  text-center border border-black rounded-2xl w-24 h-20;
     }
 
     .tasklist{
@@ -58,6 +58,7 @@
                 <div class="teamlink">Team Tenacity</div>
                 <div class="teamlink">Team Rocket</div>
                 <div class="teamlink">Team Moon</div>
+                <div class="grid items-center justify-center  text-center border border-black rounded-full w-10 h-10">+</div>
             </div>
         </div>
 

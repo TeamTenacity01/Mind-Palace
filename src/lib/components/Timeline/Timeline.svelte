@@ -240,8 +240,8 @@
         .timeline{
             @apply  border-x border-gray-300;
         }
-        .timeline::-webkit-scrollbar {
-            @apply hidden;
+        .timeline{
+            scrollbar-width: none;
         }
         .timeline, .task{
             @apply flex w-full overflow-x-scroll;
@@ -286,8 +286,8 @@
         .task > td > p{
             @apply my-auto;
         }
-        .task:not(:last-child)::-webkit-scrollbar {
-            @apply hidden;
+        .task:not(:last-child){
+            scrollbar-width: none;
         }
         .task:last-child {
             @apply pb-4;
@@ -295,6 +295,19 @@
 
     
     </style>
+
+<div class="flex flex-col flex-auto w-full overflow-x-auto">
+    <div class="flex justify-end pb-2">
+        <button class="border border-gray-400 rounded-lg px-4 py-1 mr-6" on:click={() => pastDateRange()}>
+            <p>Today</p>
+        </button>
+        <button class="border border-gray-400 rounded-lg px-4 py-1 mr-2" on:click={() => pastDateRange()}>
+            <p>{"<"}</p>
+        </button>
+        <button  class="border border-gray-400 rounded-lg px-4 py-1"on:click={() => nextDateRange()}>
+            <p> {">"} </p>
+        </button>
+    </div>
 
     <div class="w-full relative">
         <!-- timeline -->
@@ -316,7 +329,7 @@
         </div>
     
         <!-- Tasks on timeline -->
-        <div class="relative">
+        <div class="relative flex flex-auto h-full">
             <div class="w-full border border-gray-300">
                 {#each tasklist as task, i}
                     <div class="task relative" bind:this={taskDivs[i]} on:scroll={handleScrollTask(i)}>
@@ -373,15 +386,4 @@
             </table>
         </div>
     </div>
-    
-    <div class="flex justify-end pt-2">
-        <button class="border border-gray-400 rounded-lg px-4 py-1 mr-6" on:click={() => pastDateRange()}>
-            <p>Today</p>
-        </button>
-        <button class="border border-gray-400 rounded-lg px-4 py-1 mr-2" on:click={() => pastDateRange()}>
-            <p>{"<"}</p>
-        </button>
-        <button  class="border border-gray-400 rounded-lg px-4 py-1"on:click={() => nextDateRange()}>
-            <p> {">"} </p>
-        </button>
-    </div>
+</div>

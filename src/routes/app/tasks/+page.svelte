@@ -12,16 +12,18 @@
     }
 </style>
 
-<div>
-    <h1 class="screen-header">Your Tasks</h1>
-    <p class="text-lg">Take the day one task at a time.</p>
-</div>
-
-<div class="tasklist">
-    <p class="italic ml-2 text-lg">Team Tenacity</p>
-    {#each randTasks as task }
-        <div class="task">
-            {task}
-        </div>
-    {/each}
-</div>
+<main class="w-full">
+    <div>
+        <h1 class="screen-header">Your Tasks</h1>
+        <p class="text-lg">Take the day one task at a time.</p>
+    </div>
+    
+    <div class="tasklist">
+        <p class="italic ml-2 text-lg">Team Tenacity</p>
+        {#each randTasks as task }
+            <div class="task">
+                {task}
+            </div>
+        {/each}
+    </div>
+</main>

@@ -121,7 +121,7 @@
 
 <style lang="postcss">
     .container {
-        display: flex;
+        @apply flex flex-row;
     }
 
     ul {

@@ -41,7 +41,7 @@
         @apply relative h-full;
     }
     .sidepanel{
-        @apply bg-slate-900 text-white grid grid-rows-[0.5fr_9fr_0.5fr] h-screen mr-5;
+        @apply bg-slate-900 text-white grid grid-rows-[0.5fr_9fr_0.5fr] h-screen;
     }
     .sidepanel-closed{
         @apply hidden;
@@ -52,7 +52,7 @@
 
     /* Bro I overengineered this fucking close sidebar btn just because i wanted it to look good */
     .close-btn{
-        @apply absolute -right-0 bottom-1/2 w-2 h-12;
+        @apply absolute -right-3 bottom-1/2 w-2 h-12;
     }
     [class^="th-"] {
         @apply border border-slate-900 bg-slate-900 rounded-lg w-2 h-5 absolute top-3;
@@ -109,7 +109,7 @@
         @apply bg-slate-800;
     }
     .screen{
-        @apply p-4 overflow-y-auto h-screen;
+        @apply p-4 overflow-y-scroll px-7 h-screen w-full flex flex-auto;
     }
 </style>
 <main class={appClass}>
