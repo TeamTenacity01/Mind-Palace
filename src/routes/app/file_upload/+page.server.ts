@@ -1,4 +1,4 @@
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../../supabaseClient';
 
 export const actions = {
   uploadFile: async ({ request }) => {
@@ -6,7 +6,7 @@ export const actions = {
 
     const file = data.get('file');
     const storageRes = await supabase.storage
-      .from('test')
+      .from('Tenacity')
       .upload(file.name + '/', file, {
         contentType: file.type
       });

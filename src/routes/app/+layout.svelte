@@ -136,9 +136,9 @@
                 <button class="settingsbtn" type="submit">
                     🚪 Sign Out
                 </button>
-                <button type="button" class="settingsbtn">
+                <a type="button" class="settingsbtn" href="/app/settings">
                     ⚙️ Settings
-                </button>
+                </a>
             </form>
         </section>
         
