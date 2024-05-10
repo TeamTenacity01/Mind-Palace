@@ -19,11 +19,11 @@
             value: 3,
             component: Timeline,
         },
-        { 
-            label: "Messages",
-            value: 4,
-            component: Chat,
-        },
+        // { 
+        //     label: "Messages",
+        //     value: 4,
+        //     component: Chat,
+        // },
         
     ];
 
@@ -57,9 +57,9 @@
                     {view.label}
                 </button>
             {/each}
-            <button class="view-option">
+            <!-- <button class="view-option">
                 Settings
-            </button>
+            </button> -->
         </div>
         <hr class="mb-5">
 
